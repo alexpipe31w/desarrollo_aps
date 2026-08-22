@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Ejercicio DOM</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 0 20px;
+    background: #1e1e2f;
+    color: #eee;
+  }
+  h2 { color: #a78bfa; }
+  #lista {
+    list-style: none;
+    padding: 0;
+  }
+  #lista li {
+    background: #2d2d44;
+    margin: 6px 0;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .completada {
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+  button {
+    background: #a78bfa;
+    border: none;
+    color: #1e1e2f;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  input {
+    padding: 8px;
+    border-radius: 6px;
+    border: none;
+    width: 60%;
+  }
+  .eliminar {
+    background: #f87171;
+    padding: 4px 10px;
+  }
+  #contador {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #aaa;
+  }
+</style>
+</head>
+<body>
+
+<h2>Lista de tareas - Ejercicio DOM</h2>
+
+<input type="text" id="entrada" placeholder="Nueva tarea...">
+<button id="agregar">Agregar</button>
+
+<ul id="lista"></ul>
+
+<p id="contador">Tareas: 0</p>
+
+<script>
+  // 1. Seleccionar elementos del DOM
+  const entrada = document.getElementById('entrada');
+  const botonAgregar = document.getElementById('agregar');
+  const lista = document.getElementById('lista');
+  const contador = document.getElementById('contador');
+
+  let totalTareas = 0;
+
+  // 2. Función para actualizar el contador
+  function actualizarContador() {
+    contador.textContent = 'Tareas: ' + totalTareas;
+  }
+
+  // 3. Función para crear una nueva tarea (createElement)
+  function crearTarea(texto) {
+    const li = document.createElement('li');
+
+    const span = document.createElement('span');
+    span.textContent = texto;
+
+    const botonEliminar = document.createElement('button');
+    botonEliminar.textContent = 'Eliminar';
+    botonEliminar.classList.add('eliminar');
+
+    // Evento click: marcar como completada
+    span.addEventListener('click', function() {
+      span.classList.toggle('completada');
+    });
+
+    // Evento click: eliminar tarea del DOM
+    botonEliminar.addEventListener('click', function() {
+      li.remove();
+      totalTareas--;
+      actualizarContador();
+    });
+
+    li.appendChild(span);
+    li.appendChild(botonEliminar);
+    lista.appendChild(li);
+
+    totalTareas++;
+    actualizarContador();
+  }
+
+  // 4. Evento click del botón agregar
+  botonAgregar.addEventListener('click', function() {
+    const texto = entrada.value.trim();
+    if (texto !== '') {
+      crearTarea(texto);
+      entrada.value = '';
+      entrada.focus();
+    }
+  });
+
+  // 5. Evento: permitir agregar con la tecla Enter (keyup)
+  entrada.addEventListener('keyup', function(evento) {
+    if (evento.key === 'Enter') {
+      botonAgregar.click();
+    }
+  });
+</script>
+
+</body>
+</html>
