@@ -1,0 +1,24 @@
+<p>ejercicio works!</p>
+ <p>mi nombre: {{ nombre }}</p>
+
+ <input type="text" [(ngModel)]="nombre" placeholder="escribe tu nombre" />
+ <br />
+ <button (click)="cambiarNombre()">cambiar nombre</button>
+
+ <p>calculadora</p>
+
+ <input type="number" [(ngModel)]="numero1" placeholder="primer numero" />
+ <br />
+ <input type="number" [(ngModel)]="numero2" placeholder="segundo numero" />
+ <br />
+ <select [(ngModel)]="operacion">
+   <option value="">operaciones</option>
+   <option value="+">+</option>
+   <option value="-">-</option>
+   <option value="x">x</option>
+   <option value="/">/</option>
+ </select>
+ <br />
+ <button (click)="operar()">operar</button>
+
+ <p>{{ resultado }}</p>
