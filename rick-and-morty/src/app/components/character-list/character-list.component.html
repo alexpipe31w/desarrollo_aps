@@ -1,0 +1,74 @@
+<div class="container">
+  <header class="header">
+    <h1>Catálogo de Personajes - Rick and Morty</h1>
+
+    <!-- Reto 2: filtro por nombre. #search es una referencia de plantilla:
+         evita tener que importar FormsModule solo para leer un input. -->
+    <label class="search" for="search">
+      <span class="visually-hidden">Buscar personaje por nombre</span>
+      <input
+        id="search"
+        #search
+        type="search"
+        placeholder="Buscar por nombre... (ej. Rick)"
+        autocomplete="off"
+        (input)="onSearch(search.value)"
+      />
+    </label>
+  </header>
+
+  <!-- Estados de la interfaz: carga, error y vacío. aria-live hace que un
+       lector de pantalla anuncie el cambio sin que el usuario tenga que buscarlo. -->
+  <div class="states" aria-live="polite">
+    @if (loading()) {
+      <div class="state-indicator loading">Cargando personajes...</div>
+    }
+
+    @if (errorMessage()) {
+      <div class="state-indicator error">
+        <span>{{ errorMessage() }}</span>
+        <button type="button" class="btn" (click)="retry()">Reintentar</button>
+      </div>
+    }
+
+    @if (isEmpty()) {
+      <div class="state-indicator empty">
+        No se encontró ningún personaje que coincida con la búsqueda.
+      </div>
+    }
+  </div>
+
+  @if (!loading() && !errorMessage()) {
+    <div class="grid">
+      <!-- track char.id permite a Angular reutilizar el DOM de cada tarjeta
+           en vez de recrearlo entero al cambiar de página. -->
+      @for (char of characters(); track char.id) {
+        <div class="card">
+          <img [src]="char.image" [alt]="char.name" loading="lazy" />
+          <div class="card-body">
+            <h2>{{ char.name }}</h2>
+            <p>
+              <span [class]="'status ' + char.status.toLowerCase()"></span>
+              {{ char.status }} - {{ char.species }}
+            </p>
+            <p class="label">Última ubicación conocida:</p>
+            <p class="value">{{ char.location.name }}</p>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Reto 1: paginación con info.pages -->
+    @if (totalPages() > 1) {
+      <nav class="pagination" aria-label="Paginación de personajes">
+        <button type="button" class="btn" [disabled]="!hasPrev()" (click)="prevPage()">
+          ← Página anterior
+        </button>
+        <span class="page-indicator">Página {{ page() }} de {{ totalPages() }}</span>
+        <button type="button" class="btn" [disabled]="!hasNext()" (click)="nextPage()">
+          Página siguiente →
+        </button>
+      </nav>
+    }
+  }
+</div>
